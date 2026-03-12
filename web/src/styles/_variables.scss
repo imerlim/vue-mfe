@@ -1,0 +1,37 @@
+// Cores Semânticas (O que a cor representa)
+$bg-primary: #121212;
+$bg-card: #1e1e1e;
+$color-income: #00e676;
+$color-expense: #ff5252;
+
+// Tipografia e Texto
+$text-main: #ffffff;
+$text-muted: #b3b3b3;
+
+// Cores de Marca (Brand Colors)
+$color-primary: #003366; // Um azul marinho clássico do setor financeiro
+$color-primary-hover: #003366; // Tom um pouco mais claro para o hover
+
+// Layout
+$spacing-base: 1rem;
+
+// Mixins (Sua ferramenta de produtividade)
+@mixin flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@mixin responsive-grid($cols-tablet: 2, $cols-desktop: 3, $gap: 1.5rem) {
+    display: grid;
+    gap: $gap;
+    grid-template-columns: 1fr;
+
+    @media (min-width: 640px) {
+        grid-template-columns: repeat($cols-tablet, 1fr);
+    }
+
+    @media (min-width: 1024px) {
+        grid-template-columns: repeat($cols-desktop, 1fr);
+    }
+}
