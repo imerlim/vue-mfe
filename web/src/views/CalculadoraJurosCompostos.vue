@@ -2,67 +2,43 @@
 import { ref, nextTick } from 'vue'
 import CustomInput from '@/components/CustomInput.vue'
 import CustomButton from '@/components/CustomButton.vue'
+import { calculateCompoundInterest } from '@/utils/calculator' // Importa a lógica testada
 
 const valorInicial = ref(0)
 const valorMensal = ref(0)
 const taxaJuros = ref(0)
 const periodo = ref(0)
-const taxaJurosSelect = ref('Mensal')
-const periodoSelect = ref('Anos')
+const taxaJurosSelect = ref<'Mensal' | 'Anual'>('Mensal')
+const periodoSelect = ref<'Meses' | 'Anos'>('Anos')
 const montanteFinal = ref('R$ 0,00')
 const valorTotalInvestido = ref('R$ 0,00')
 const totalEmJuros = ref('R$ 0,00')
 
-const teste = () => {
-    // 1. Verificações usando .value
-    if (!valorInicial.value && !valorMensal.value) {
-        // return $msg.warning('Você precisa inserir pelo menos um valor: inicial ou mensal.')
-        return
-    }
-    if (!taxaJuros.value) {
-        // return $msg.warning('Você precisa inserir uma taxa de juros.')
-        return
-    }
-    if (!periodo.value) {
-        // return $msg.warning('Você precisa inserir um período.')
-        return
-    }
+const calculaJuros = () => {
+    // 1. Validações de Interface (Mantém o que já tinha)
+    if (!valorInicial.value && !valorMensal.value) return
+    if (!taxaJuros.value || !periodo.value) return
 
-    // 2. Atribuição de valores (C e A)
-    const C = valorInicial.value
+    // 3. O "Pulo do Gato": Chama a função que o Vitest já validou
+    const resultado = calculateCompoundInterest(
+        valorInicial.value || 0,
+        valorMensal.value || 0,
+        taxaJuros.value,
+        taxaJurosSelect.value,
+        periodo.value,
+        periodoSelect.value
+    )
 
-    // Se o valor mensal estiver vazio, definimos como 0
-    if (!valorMensal.value) {
-        valorMensal.value = 0
-    }
-    const A = valorMensal.value
-
-    // 3. Cálculos de Juros
-    // Removi o parseFloat porque seus refs já são números
-    const i =
-        taxaJurosSelect.value === 'Mensal'
-            ? taxaJuros.value / 100
-            : Math.pow(1 + taxaJuros.value / 100, 1 / 12) - 1
-
-    const t = periodoSelect.value === 'Anos' ? periodo.value * 12 : periodo.value
-
-    // Fórmula do Montante
-    const M = C * (1 + i) ** t + (A / i) * ((1 + i) ** t - 1)
-    const totalInvestidoCalc = C + A * t
-    const totalEmJurosCalc = M - totalInvestidoCalc
-
-    // 4. Atribuindo os resultados formatados aos seus refs de exibição
-    // Certifique-se de que montanteFinal, valorTotalInvestido e totalEmJuros também sejam refs lá no topo
-    montanteFinal.value = isNaN(M)
-        ? 'R$ 0,00'
-        : M.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-
-    valorTotalInvestido.value = totalInvestidoCalc.toLocaleString('pt-BR', {
+    // 4. Atribuição para a tela (Formatação)
+    montanteFinal.value = resultado.montanteFinal.toLocaleString('pt-BR', {
         style: 'currency',
         currency: 'BRL'
     })
-
-    totalEmJuros.value = totalEmJurosCalc.toLocaleString('pt-BR', {
+    valorTotalInvestido.value = resultado.totalInvestido.toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+    })
+    totalEmJuros.value = resultado.totalJuros.toLocaleString('pt-BR', {
         style: 'currency',
         currency: 'BRL'
     })
@@ -110,7 +86,7 @@ const teste = () => {
                 </div>
 
                 <div class="actions">
-                    <CustomButton @click="teste()">teste</CustomButton>
+                    <CustomButton @click="calculaJuros()">Calcular</CustomButton>
                 </div>
 
                 <div
