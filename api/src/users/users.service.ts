@@ -17,6 +17,7 @@ export class UsersService {
     const userToSave = {
       ...createUserDto,
       senha: hashedPassword,
+      dataNascimento: new Date(`${createUserDto.dataNascimento}T00:00:00Z`),
     };
 
     return this.prisma.users.create({

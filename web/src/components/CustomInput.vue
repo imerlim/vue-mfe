@@ -17,6 +17,7 @@ interface Props {
     // Botões opcionais
     showSearch?: boolean
     showClear?: boolean
+    required?: boolean
 }
 
 // Definindo valores padrão (Boas práticas Sênior)
@@ -25,7 +26,8 @@ const props = withDefaults(defineProps<Props>(), {
     type: 'text',
     textSize: 'text-base',
     error: false,
-    formata: false
+    formata: false,
+    required: false
 })
 
 const emit = defineEmits<{
@@ -81,6 +83,7 @@ defineExpose({
                 <slot name="prepend"></slot>
             </div>
             <input
+                lang="pt-BR"
                 ref="inputRef"
                 :id="id"
                 :type="type"
@@ -91,6 +94,7 @@ defineExpose({
                 @input="updateValue"
                 class="input-field"
                 :class="textSize"
+                :required="required"
             />
             <div v-if="$slots.append" class="input-append">
                 <slot name="append"></slot>

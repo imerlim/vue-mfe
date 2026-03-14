@@ -1,11 +1,22 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed } from 'vue'
 import { useAuth } from '@/composables/auth/useAuth'
+import { useFormValidation } from '@/composables/validation/useFormValidation'
 import CustomInput from '@/components/CustomInput.vue'
 
-const router = useRouter()
-const { register, isSubmitting, errorMsg } = useAuth()
+const { register, isSubmitting, errorMsg: authError } = useAuth()
+
+const { cpfError, validateCPFField } = useFormValidation()
+// Computed para validar o formulário como um todo
+const isFormInvalid = computed(() => {
+    return (
+        !form.value.nome ||
+        !form.value.email ||
+        !form.value.cpf ||
+        !!cpfError.value || // Se houver erro de CPF, o form é inválido
+        form.value.senha.length < 6
+    )
+})
 
 const form = ref({
     nome: '',
@@ -16,14 +27,12 @@ const form = ref({
     senha: ''
 })
 
-const handleRegister = async () => {
+async function handleRegister() {
+    if (!validateCPFField(form.value.cpf)) return
     try {
         await register(form.value)
-        alert('Cadastro realizado com sucesso!')
-        router.push('/login')
-    } catch (err) {
-        // Erro tratado via errorMsg no composable
-    }
+        console.log('Sucesso! Igor cadastrado no db_mfe.')
+    } catch (error) {}
 }
 </script>
 
@@ -63,6 +72,7 @@ const handleRegister = async () => {
                         v-model="form.telefone"
                         label="Telefone"
                         type="tel"
+                        required
                         placeholder="(21) 99999-9999"
                     />
                 </div>
@@ -73,6 +83,8 @@ const handleRegister = async () => {
                     type="text"
                     required
                     placeholder="000.000.000-00"
+                    :error="!!cpfError"
+                    @blur="validateCPFField(form.cpf)"
                 />
 
                 <custom-input
@@ -96,6 +108,10 @@ const handleRegister = async () => {
                 <div class="footer-links">
                     <span>Já tem uma conta?</span>
                     <router-link to="/login">Fazer Login</router-link>
+                </div>
+
+                <div v-if="authError || cpfError" class="error-banner">
+                    {{ authError || cpfError }}
                 </div>
             </footer>
         </form>

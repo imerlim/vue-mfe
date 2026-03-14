@@ -15,9 +15,13 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
     (response) => response,
     (error) => {
-        // Se o NestJS retornar erro de validação (400), podemos tratar aqui
         if (error.response?.status === 400) {
-            console.error('Erro de validação:', error.response.data.message)
+            // O NestJS costuma enviar um array de strings em .message
+            const messages = error.response.data.message
+            console.error(
+                'Erros do NestJS:',
+                Array.isArray(messages) ? messages.join(', ') : messages
+            )
         }
         return Promise.reject(error)
     }

@@ -33,7 +33,7 @@ const formatValue = (amount: number, type: string) => {
     padding: $spacing-base;
 
     // Em vez de lighten($bg-primary, 5%), use:
-    background: color.adjust($bg-primary, $lightness: 5%);
+    background: color-mix(in srgb, var(--bg-page), white 5%);
 
     border-radius: 8px;
     margin-bottom: 0.5rem;

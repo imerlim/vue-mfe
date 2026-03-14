@@ -11,7 +11,7 @@ export function useAuth() {
 
         try {
             // Note que a rota continua sendo '/users' no NestJS
-            const response = await api.post('/users', userData)
+            const response = await api.post('/users/create', userData)
             return response.data
         } catch (err: any) {
             // Captura a mensagem que configuramos no Exception do NestJS
