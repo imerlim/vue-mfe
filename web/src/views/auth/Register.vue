@@ -83,7 +83,8 @@ async function handleRegister() {
                     type="text"
                     required
                     placeholder="000.000.000-00"
-                    :error="!!cpfError"
+                    :error-message="cpfError ?? 'Campo obrigatório!'"
+                    :error="!!cpfError || !form.cpf"
                     @blur="validateCPFField(form.cpf)"
                 />
 
@@ -95,13 +96,13 @@ async function handleRegister() {
                     placeholder="********"
                 />
 
-                <div v-if="errorMsg" class="error-banner">
-                    {{ errorMsg }}
+                <div v-if="authError" class="error-banner">
+                    {{ authError }}
                 </div>
             </main>
 
             <footer>
-                <button type="submit" :disabled="isSubmitting" class="btn-submit">
+                <button type="submit" :disabled="isSubmitting || isFormInvalid" class="btn-submit">
                     {{ isSubmitting ? 'Processando...' : 'Cadastrar' }}
                 </button>
 

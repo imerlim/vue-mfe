@@ -34,6 +34,7 @@ const emit = defineEmits<{
     (e: 'update:modelValue', value: string | number): void
     (e: 'on-search'): void
     (e: 'on-clear'): void
+    (e: 'blur', event: FocusEvent): void // <-- Adicione esta linha
 }>()
 
 // PONTO 1: Encapsulamento da lógica de formatação
@@ -92,6 +93,7 @@ defineExpose({
                 :inputmode="formata ? 'numeric' : inputmode"
                 :disabled="disabled"
                 @input="updateValue"
+                @blur="emit('blur', $event)"
                 class="input-field"
                 :class="textSize"
                 :required="required"
