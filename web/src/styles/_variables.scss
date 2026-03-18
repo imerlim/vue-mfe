@@ -24,10 +24,12 @@ $color-primary-hover: #003366; // Tom um pouco mais claro para o hover
     justify-content: center;
 }
 
-@mixin responsive-grid($cols-tablet: 2, $cols-desktop: 3, $gap: 1.5rem) {
+@mixin responsive-grid($cols-mobile: 1, $cols-tablet: 4, $cols-desktop: 6, $gap: 1rem) {
     display: grid;
     gap: $gap;
-    grid-template-columns: 1fr;
+
+    // Agora o padrão inicial é o que você definir (ex: 4 colunas)
+    grid-template-columns: repeat($cols-mobile, 1fr);
 
     @media (min-width: 640px) {
         grid-template-columns: repeat($cols-tablet, 1fr);

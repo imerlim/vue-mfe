@@ -53,7 +53,7 @@ defineOptions({
 
     // 3. Estados (Onde o SCSS brilha com o '&')
     &:hover:not(.is-disabled) {
-        background-color: color.scale($color-primary, $lightness: -10%);
+        background-color: var(--accent-color-hover);
     }
 
     &:active:not(.is-disabled) {

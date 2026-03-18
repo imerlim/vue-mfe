@@ -115,7 +115,7 @@ const calculaJuros = () => {
 </template>
 
 <style lang="scss" scoped>
-@use '@/styles/variables' as variables;
+@use '../styles/_variables' as variables;
 
 .header-calculadora {
     background-color: variables.$bg-card; // Usando sua variável de fundo de card
@@ -153,7 +153,7 @@ const calculaJuros = () => {
         margin-top: 2rem;
 
         .grid-inputs {
-            @include variables.responsive-grid(2, 2, 2rem);
+            @include variables.responsive-grid(1, 2, 2, 2rem);
         }
         .actions {
             display: flex;
@@ -168,7 +168,7 @@ const calculaJuros = () => {
             border-top: 1px solid rgba(255, 255, 255, 0.1);
 
             // Ajustado para 2 colunas no desktop para manter o padrão do grid-inputs
-            @include variables.responsive-grid(2, 2, 1.5rem);
+            @include variables.responsive-grid(1, 2, 2, 1.5rem);
         }
 
         .totalizador-item {

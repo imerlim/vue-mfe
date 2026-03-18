@@ -13,8 +13,13 @@ const routes = [
     },
     {
         path: '/register',
-        name: 'register',
+        name: 'Register',
         component: () => import('@/views/auth/Register.vue')
+    },
+    {
+        path: '/memory-board',
+        name: 'MemoryView',
+        component: () => import('@/views/game/MemoryView.vue')
     }
 ]
 
