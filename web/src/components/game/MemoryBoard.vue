@@ -13,26 +13,43 @@
             </div>
         </div>
     </div>
+
+    <!-- <Modal
+        :model-value="true"
+        size="sm"
+        mode="modal"
+        title="Vitória!"
+        action-title="Recomeçar"
+        :action-handler="resetGame"
+    >
+        <p>Você terminou em {{ moves }} movimentos!</p>
+    </Modal> -->
+
+    <Modal
+        v-model="isGameOver"
+        mode="modal"
+        size="sm"
+        title="Vitória!"
+        action-title="Recomeçar"
+        :action-handler="resetGame"
+    >
+        <p>Você terminou em {{ moves }} movimentos!</p>
+    </Modal>
 </template>
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useMemoryGame } from '@/composables/game/useMemoryGame'
+import Modal from '@/components/Modal.vue'
 
 // O 'useMemoryGame' encapsula toda a complexidade
-const { cards, initializeGame, flipCard } = useMemoryGame()
+const { cards, initializeGame, flipCard, isGameOver, moves, resetGame } = useMemoryGame()
 
 onMounted(() => {
     // Definimos os valores apenas uma vez, a inicialização cria os IDs e Status
     const emojis = ['🚀', '⚛️', '🌿', '🔥', '💎', '🎨', '❤️', '🦴', '🎶', '👻', '👽', '🤖']
     initializeGame(emojis)
 })
-
-const toggleCard = (id: number) => {
-    console.log(id)
-    // @ts-ignore - apenas para teste rápido
-    cardsStatus.value[id] = !cardsStatus.value[id]
-}
 </script>
 
 <style lang="scss" scoped>
@@ -47,26 +64,26 @@ const toggleCard = (id: number) => {
 
 .game-container {
     display: grid;
-    grid-template-columns: repeat(6, 100px);
-    gap: 15px;
-    padding: 20px;
-    @include variables.responsive-grid(4, 4, 6, 0.5rem);
-
+    // No desktop 6 colunas, no mobile 4
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
     width: 100%;
-    max-width: 800px; // Aumente para caber as 6 colunas no desktop
+    max-width: 800px;
     margin: 0 auto;
-    padding: 10px;
-    @media (max-width: 480px) {
-        // Forçamos as colunas a serem menores para caberem na largura da tela
-        grid-template-columns: repeat(4, minmax(60px, 1fr));
+    padding: 15px;
+    box-sizing: border-box; // Garante que o padding não "estique" o container
+
+    @media (max-width: 600px) {
+        grid-template-columns: repeat(4, 1fr); // 4 colunas no mobile
         gap: 8px;
+        padding: 10px;
     }
 }
 
 .card {
     width: 100%;
-    aspect-ratio: 2/3;
-    height: 150px;
+    aspect-ratio: 2/3; // Deixe o aspect-ratio definir a altura baseado na largura
+    height: auto; // REMOVA o height: 150px fixo
     perspective: 1000px;
     cursor: pointer;
 
@@ -75,7 +92,7 @@ const toggleCard = (id: number) => {
         position: relative;
         width: 100%;
         height: 100%;
-        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); // Transição mais suave
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         transform-style: preserve-3d;
     }
 

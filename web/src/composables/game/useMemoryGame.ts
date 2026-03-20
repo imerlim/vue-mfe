@@ -35,6 +35,14 @@ export function useMemoryGame() {
         return cards.value.length > 0 && cards.value.every((card) => card.isMatched)
     })
 
+    const resetGame = () => {
+        moves.value = 0
+        isLock.value = false
+
+        const emojis = ['🚀', '⚛️', '🌿', '🔥', '💎', '🎨', '❤️', '🦴', '🎶', '👻', '👽', '🤖']
+        initializeGame(emojis)
+    }
+
     const flipCard = (card: Card) => {
         // 1. Cláusula de Guarda: Bloqueia cliques inválidos
         if (isLock.value || card.isFlipped || card.isMatched) return
@@ -80,6 +88,7 @@ export function useMemoryGame() {
         isLock,
         flipCard,
         isGameOver,
-        initializeGame
+        initializeGame,
+        resetGame
     }
 }
